@@ -17,5 +17,16 @@ spring:
     enabled: false
   datasource:
     url: jdbc:mysql://localhost:3306/pagamento
-    username: inova
-    password: 123mudar
+    username: root
+    password: 123456
+    
+  rabbitmq: 
+    host: localhost
+    port: 5672
+    username: admin
+    password: admin
+    
+crud:
+  rabbitmq:
+    exchange: crud.exchange
+    queue: crud.produto.queue    

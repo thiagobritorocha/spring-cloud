@@ -10,21 +10,28 @@ import org.springframework.stereotype.Service;
 import br.com.linkstart.data.vo.ProdutoVO;
 import br.com.linkstart.entity.Produto;
 import br.com.linkstart.exception.ResourceNotFoundException;
+import br.com.linkstart.message.ProdutoSendMessagem;
 import br.com.linkstart.repository.ProdutoRepository;
 
 @Service
 public class ProdutoService {
 
 	private final ProdutoRepository produtoRepository;
+	private final ProdutoSendMessagem produtoSendMessagem;
 
 	@Autowired
-	public ProdutoService(ProdutoRepository produtoRepository) {
-		super();
+	public ProdutoService(ProdutoRepository produtoRepository, ProdutoSendMessagem produtoSendMessagem) {
 		this.produtoRepository = produtoRepository;
+		this.produtoSendMessagem = produtoSendMessagem;
 	}
 	
 	public ProdutoVO create(ProdutoVO produtoVO) {
-		return ProdutoVO.create(produtoRepository.save(Produto.create(produtoVO)));
+		
+		var produto = ProdutoVO.create(produtoRepository.save(Produto.create(produtoVO)));
+		
+		produtoSendMessagem.sendMessage(produto);
+		
+		return produto;
 	}
 	
 	public Page<ProdutoVO> findAll(Pageable pageable){
